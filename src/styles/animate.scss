@@ -1,0 +1,15 @@
+/* 动画 */
+
+.animate-list-item {
+    transition: all 0.5s;
+}
+
+.animate-list-enter,
+.animate-list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.animate-list-leave-active {
+    position: absolute;
+}

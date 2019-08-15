@@ -1,0 +1,155 @@
+//to reset element-ui default css
+// @import './mixin.scss';
+// @import './variables.scss';
+.el-upload {
+    input[type="file"] {
+        display: none !important;
+    }
+}
+
+.el-upload__input {
+    display: none;
+}
+
+.el-input {
+    width: auto;
+    // &__suffix {
+    //     right: 20px !important;
+    // }
+    .el-input__count .el-input__count-inner {
+        background-color: unset !important;
+    }
+}
+
+//暂时性解决diolag 问题 https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+    transform: none;
+    left: 0;
+    position: relative;
+    margin: 0 auto;
+    .el-dialog__header {
+        padding: 28px;
+        text-align: center;
+    }
+    .el-dialog__headerbtn {
+        top: 26px;
+        right: 26px;
+    }
+    .el-dialog__body {
+        padding-top: 0;
+    }
+    .el-dialog__footer {
+        padding: 28px;
+        text-align: center;
+        background: rgba(248, 248, 248, 1);
+        .el-button {
+            width: 126px;
+        }
+    }
+}
+
+//elementUI分页样式
+.el-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    margin: 40px auto;
+    .btn-prev,
+    .btn-next {
+        height: 40px;
+        margin: 0 !important;
+    }
+    .el-pager {
+        background: rgba(244, 244, 245, 1);
+        li,
+        .more {
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+        }
+    }
+    .el-pagination__total {
+        margin-left: 20px;
+        height: 40px !important;
+        font-size: 14px;
+        line-height: 40px !important;
+        color: #999999;
+    }
+    .el-pagination__jump {
+        margin: 0 0 4px 10px;
+        height: 40px !important;
+        color: #999999;
+        .el-input__inner {
+            width: 40px !important;
+            height: 40px !important;
+        }
+    }
+}
+
+.el-radio {
+    .el-radio-group {
+        .el-radio-button {
+            margin-right: 14px;
+        }
+        .is-active {
+            background: #fff;
+            border: 1px solid $c-primary;
+        }
+    }
+}
+
+//element ui upload
+.upload-container {
+    .el-upload {
+        width: 100%;
+        .el-upload-dragger {
+            width: 100%;
+            height: 200px;
+        }
+    }
+}
+
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.table-item {
+    white-space: normal !important;
+}
+
+.tree-wrapper {
+    width: 300px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    margin-right: 20px;
+    @include scrollBar;
+    flex: 0 0 300px;
+    &__title {
+        line-height: 32px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        font-size: $--font-size-large;
+        color: #606266;
+    }
+    &__input {
+        margin-bottom: 20px;
+    }
+}
+
+.search-form {
+    .el-form-item {
+        margin-right: 30px;
+    }
+}
+
+.danger {
+    color: #F56C6C;
+}
+
+// .el-table {
+//     .el-table__body-wrapper {
+//         @include scrollBar;
+//     }
+// }

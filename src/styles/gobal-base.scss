@@ -1,0 +1,18 @@
+@import "./element-var.scss";
+@import './mixin.scss';
+// TODO 命名待规范
+
+/* 自定义变量 */
+
+$c-border: rgba(240, 240, 240, 1);
+$c-border-opacity: rgba(153, 153, 153, 0.08);
+$c-nav-bg: #F6F6F6;
+
+/* 顶部栏 */
+
+$c-nav-font: $--color-text-regular;
+$c-nav-font-active: $--color-primary;
+
+/* 颜色 */
+
+$c-primary:$--color-primary;
