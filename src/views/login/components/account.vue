@@ -68,7 +68,6 @@
                             class="login__submit-btn"
                             @click="submit"
                         >登录</el-button>
-                        
                     </el-col>
                 </el-row>
             </el-form-item>
@@ -145,7 +144,7 @@ export default {
 
     },
     methods: {
-    // 忘记密码
+        // 忘记密码
         forgetPassword() {
             this.$router.push({ name: 'resetPassword' })
         },

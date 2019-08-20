@@ -67,6 +67,9 @@ import {
     validateStrLength,
     validateTipsMobile 
 } from '@/utils/validator'
+import {
+    getSmsCode
+} from '@/api/login'
 export default {
     name: 'SmsCaptcha',
     props: {
@@ -113,23 +116,28 @@ export default {
                 if (!tips) {
                     let timeLen = 60
                     this.captcha.disabled = true
-                    let param = { mobile: this.smsCaptcha.mobilePhone }
-                    // 发短信验证 TODO
-                    /* this.$post(this.$global.authPathPrefix + '/assist/dynamicPassword', param).then((response) => {
-                        if (this.$reponseStatus(response)) {
-                            // 设置页面短信验证刷新时间
-                            let timer = setInterval(() => {
-                                --timeLen
-                                if (timeLen === 0) {
-                                    clearInterval(timer)
-                                    this.captcha.btn = '获取验证码'
-                                    this.captcha.disabled = false
-                                } else {
-                                    this.captcha.btn = `${timeLen}s后再获取`
-                                }
-                            }, 1000)
-                        }
-                    }) */ 
+                    let param = {
+                        phone: this.smsCaptcha.mobilePhone,
+                        type: 'login'
+                    }
+                    // 发短信验证
+                    getSmsCode(param).then((data) => {
+                        console.log('getSmsCode data', data)
+                        this.$message.success('发送短信成功')
+                        // 设置页面短信验证刷新时间
+                        let timer = setInterval(() => {
+                            --timeLen
+                            if (timeLen === 0) {
+                                clearInterval(timer)
+                                this.captcha.btn = '获取验证码'
+                                this.captcha.disabled = false
+                            } else {
+                                this.captcha.btn = `${timeLen}s后再获取`
+                            }
+                        }, 1000)
+                    }).catch((err) => {
+                        this.captcha.disabled = false
+                    })
                 }
             })
         },

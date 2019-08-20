@@ -83,17 +83,6 @@
                                     </div>
                                 </el-form-item>
 
-                                <!-- <el-form-item v-if="isCheckOn" label prop="checkCode">
-                                            <div class="code-content" @keyup.enter="submit">
-                                                <el-input v-model.trim="resetpwCaptcha.checkCode" placeholder="请输入验证码">
-                                                    <template slot="append">
-                                                        <a style="cursor: pointer" title @click="changeCode('imgObj1')">
-                                                            <img id="imgObj1" :src="imgUrl" alt />
-                                                        </a>
-                                                    </template>
-                                                </el-input>
-                                            </div>
-                                        </el-form-item> -->
                                 <el-form-item>
                                     <el-row>
                                         <el-col>
@@ -112,7 +101,6 @@
                         </div>
                     </el-card>
                 </div>
-
             </div>
             <com-footer />
         </div>
@@ -123,7 +111,8 @@ import ComFooter from '@/views/layout/components/ComFooter'
 import Navbar from '@/views/login/components/login-nav'
 import store from '@/store'
 import {
-    login
+    getSmsCode,
+    resetPwd
 } from '@/api/login'
 import { 
     validateStrLength,
@@ -141,16 +130,35 @@ export default {
         return {
             submitLoading: false,
             resetpwCaptcha: {
-                mobilePhone: '',
-                OTPToken: ''
+                mobilePhone: '13570877243',
+                OTPToken: '',
+                password: '',
+                passwordConfirm: ''
             },
             isCheckOn: false,
             rule: {
                 mobilePhone: [
-                    { validator: validateTipsMobile(true), trigger: 'submit' }
+                    { validator: validateTipsMobile(true), trigger: 'blur' }
                 ],
                 OTPToken: [
-                    { required: true, message: '请输入短信验证码', trigger: 'submit' }
+                    { required: true, message: '请输入短信验证码', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: '请输入新密码', trigger: 'blur' },
+                    { type: 'string', pattern: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,}$/g, message: '至少包含8位以上数字和字母', trigger: 'blur' }
+                ],
+                passwordConfirm: [
+                    { required: true, message: '请再次输入新密码', trigger: 'blur' },
+                    { 
+                        validator: function (rule, value, callback) {
+                            if (value !== that.resetpwCaptcha.password) {
+                                callback(new Error('两次输入的密码不一致'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             focus: { count: true },
@@ -182,6 +190,11 @@ export default {
     created() {
     },
     methods: {
+        resetForm() {
+            this.resetpwCaptcha.OTPToken = ''
+            this.resetpwCaptcha.password = ''
+            this.resetpwCaptcha.passwordConfirm = ''
+        },
         // 获取验证码
         sendMessage() {
             this.$refs['resetpwForm'].clearValidate()
@@ -189,23 +202,27 @@ export default {
                 if (!tips) {
                     let timeLen = 60
                     this.captcha.disabled = true
-                    let param = { mobile: this.resetpwCaptcha.mobilePhone }
-                    // 发短信验证 TODO
-                    /* this.$post(this.$global.authPathPrefix + '/assist/dynamicPassword', param).then((response) => {
-                        if (this.$reponseStatus(response)) {
-                            // 设置页面短信验证刷新时间
-                            let timer = setInterval(() => {
-                                --timeLen
-                                if (timeLen === 0) {
-                                    clearInterval(timer)
-                                    this.captcha.btn = '获取验证码'
-                                    this.captcha.disabled = false
-                                } else {
-                                    this.captcha.btn = `${timeLen}s后再获取`
-                                }
-                            }, 1000)
-                        }
-                    }) */ 
+                    let param = {
+                        phone: this.resetpwCaptcha.mobilePhone,
+                        type: 'resetpassword'
+                    }
+                    // 发短信验证
+                    getSmsCode(param).then((data) => {
+                        this.$message.success('发送短信成功')
+                        // 设置页面短信验证刷新时间
+                        let timer = setInterval(() => {
+                            --timeLen
+                            if (timeLen === 0) {
+                                clearInterval(timer)
+                                this.captcha.btn = '获取验证码'
+                                this.captcha.disabled = false
+                            } else {
+                                this.captcha.btn = `${timeLen}s后再获取`
+                            }
+                        }, 1000)
+                    }).catch((err) => {
+                        this.captcha.disabled = false
+                    })
                 }
             })
         },
@@ -215,8 +232,29 @@ export default {
                 if (!valid) {
                     return
                 }
-                // TODO 请求修改
-                
+                if (this.submitLoading) { return }
+                this.submitLoading = true
+                // 请求修改
+                let requestParmas =  {
+                    mobile: this.resetpwCaptcha.mobilePhone,
+                    password: this.resetpwCaptcha.password,
+                    textCode: this.resetpwCaptcha.OTPToken
+                }
+                resetPwd(requestParmas).then((data) => {
+                    this.submitLoading = false
+                    this.resetForm()
+                    this.$message({
+                        message: '密码修改成功，请使用新密码重新登录，跳转中...',
+                        duration: 2000,
+                        type: 'success',
+                        onClose: () => {
+                            this.$router.push('/login')
+                        }
+                    })
+                }).catch((err) => {
+                    this.submitLoading = false
+                    this.resetForm()
+                })
             })
         },
         handlePasswordAppear() {

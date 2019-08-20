@@ -11,8 +11,7 @@
         "build:report": "npm_config_report=true npm run build",
         "lint": "eslint --ext .js,.vue src",
         "lint:fix": "eslint --fix --ext .js,.vue src",
-        "test": "npm run lint",
-        "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
+        "test": "npm run lint"
     },
     "dependencies": {
         "axios": "0.18.0",

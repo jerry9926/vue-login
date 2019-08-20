@@ -28,7 +28,6 @@ const user = {
 
     mutations: {
         setToken (state, token) {
-            debugger
             state.token = token
         },
         updateUser (state) {

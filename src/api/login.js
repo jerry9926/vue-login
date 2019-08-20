@@ -5,7 +5,7 @@ import md5 from 'blueimp-md5'
 let BASE_PATH = process.env.NODE_ENV === 'production' ? '' : '/login'
 process.env.NODE_ENV === 'production'
 
-const SALT = 'WALCLIENT'
+const SALT = 'WHATSUP'
 
 // 登录
 /* 
@@ -31,7 +31,7 @@ export function login(params) {
         redirect_url: 'http://dev.flz.aplusunion.cn'
     }
     return request({
-        url: BASE_PATH + '/v1/openapi/user/login',
+        url: BASE_PATH + '/user/login',
         method: 'post',
         data: qs.stringify(data),
         headers: {
@@ -41,23 +41,59 @@ export function login(params) {
     })
 }
 
-// 验证码
-export function captcha() {
-    return '/v1/openapi/login/captcha'
+/**
+ * 获取短信验证码
+ * @param {phone,tt: new Date().getTime(), type: 'login'/'resetpassword'} params 
+ */
+export function getSmsCode(params) {
+    params.tt = new Date().getTime()
+    return request({
+        url: BASE_PATH + '/user/sms/captcha',
+        method: 'get',
+        params: params,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+    })
 }
 
-// 用户信息
-export function getInfo() {
+// 验证码
+export function captcha() {
+    return '/login/captcha'
+}
+
+/**
+ * 修改密码
+ * @param {password,mobile,textCode} params 
+ */
+export function changePwd(params) {
     return request({
-        url: '/auth/user',
-        method: 'get'
+        url:  BASE_PATH + '/user/user/modifyPassword',
+        method: 'post',
+        data: params,
+        aFormat: true,
+    })
+}
+
+/**
+ * 重置密码
+ * @param {password,mobile,textCode} params 
+ */
+export function resetPwd(params) {
+    const data = { ...params }
+    data.password = md5(SALT + data.password)
+    return request({
+        url:  BASE_PATH + '/user/user/resetPassword',
+        method: 'post',
+        data: data,
+        aFormat: true
     })
 }
 
 // 登出
 export function logout() {
     return request({
-        url: '/auth/logout',
+        url:  BASE_PATH + '/auth/logout',
         method: 'get'
     })
 }

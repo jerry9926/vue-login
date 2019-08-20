@@ -9,9 +9,11 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import '@/icons' // icon
 import '@/permission' // permission control
 import '../static/font/iconfont.css'
+
+// mock
+require('./mock/index')
 
 Vue.use(ElementUI)
 

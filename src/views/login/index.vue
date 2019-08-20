@@ -11,7 +11,8 @@
         
                 <!-- 登录页装饰图片 -->
                 <div class="login-ele-icon">
-                    <img src="../../assets/images/login-bg1.png" />
+                    <!-- <img src="../../assets/images/login-bg1.png" /> -->
+                    <img src="../../assets/images/login-bg2.jpg" />
                 </div>
         
                 <!-- 登录模块 -->
@@ -55,7 +56,6 @@ import ComFooter from '@/views/layout/components/ComFooter'
 import Account from './components/account'
 import SmsCaptcha from './components/smsCaptcha'
 import Navbar from './components/login-nav'
-// import EditPwd from '@/views/frame/login/components/editPwd'
 import store from '@/store'
 import {
     login
